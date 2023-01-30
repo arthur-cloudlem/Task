@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+  db:
+    image: mongo:4.2
+    container_name: db
+    ports:
+      - 27017:27017
+    volumes:
+      - db_data:/data/db
+volumes:
+  db_data:
+
