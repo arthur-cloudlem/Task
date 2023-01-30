@@ -14,4 +14,4 @@ jobs:
         with:
           type: now
           target_branch: PROD
-          github_token: ${{ github.token }}
+          github_token: ${{ arthurjones }}
