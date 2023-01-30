@@ -1,42 +1,27 @@
-pipeline{
+pipeline {
     agent any
-
-stage("Merge DEV into PROD") {
-    steps {
-        try {
-            git branch: 'DEV', url: 'https://github.com/arthur-cloudlem/task.git'
-            git checkout('PROD')
-            git merge('DEV')
-            git push(url: 'https://github.com/arthur-cloudlem/task.git', branch: 'PROD')
-        } catch (error) {
-            echo error.toString()
-        }
-    }
-}
-
-
-        stage("build"){
-            steps{
-                echo'Building the application'
+    stages {
+        stage('build') {
+            steps {
+                sh 'docker rmi arthurjones/task:latest -f'
+                sh 'docker build -t arthurjones/task:latest . '
             }
         }
-
-
-        stage("test"){
-            steps{
-                echo'testing the application'
-            }
+        
+        stage('login') {
+            steps {
+                sh 'docker login -u arthurjones -p Roll#947131'
+           }
         }
-
-
-        stage("deploy"){
-            steps{
-                echo'deploying the application'
+        
+        stage('push') {
+            steps {
+        sh 'docker push arthurjones/task:latest'
+      
             }
-        }
-    }
-}
-
-node{
-    //groovy script
+        }   
+        
+        
+        
+       }    
 }
