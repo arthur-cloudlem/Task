@@ -1,38 +1,27 @@
 pipeline {
     agent any
-    
     stages {
-       stage('Checkout') {
+        stage('build') {
             steps {
-            checkout scmGit(branches: [[name: '**']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ALPHA-04/app-1.git']])
-            }
-       }
-         stage('Clone Repository') {
-            steps {
-            git branch: 'DEV', url: 'https://github.com/ALPHA-04/app-1.git'
+                sh 'docker rmi arthurjones/task:latest -f'
+                sh 'docker build -t arthurjones/task:latest . '
             }
         }
-  
-    stage('Build and Run Docker Compose') {
+        
+        stage('login') {
             steps {
-           sh 'docker-compose up --force-recreate --no-color --no-color --wait'
-           sh 'docker compose ps'
+                sh 'docker login -u arthurjones -p Roll#947131'
            }
         }
-    
-
- 
-    
-       
-        //  stage('Push Docker Image to Docker Hub') {
-        //      steps {
-        //          sh 'docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD'
-        //          sh 'docker tag fullstack-app:latest $DOCKER_HUB_USERNAME/fullstack-app:$BUILD_NUMBER'
-        //          sh 'docker push $alpha04/app-01:$BUILD_NUMBER'
-        //           }
-        //     }
-         
-         
-       }
-          
-    }
+        
+        stage('push') {
+            steps {
+        sh 'docker push arthurjones/task:latest'
+      
+            }
+        }   
+        
+        
+        
+       }    
+}
