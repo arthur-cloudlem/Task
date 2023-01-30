@@ -1,42 +1,38 @@
-pipeline{
+pipeline {
     agent any
-
-stage("Merge DEV into PROD") {
-    steps {
-        try {
-            git branch: 'DEV', url: 'https://github.com/arthur-cloudlem/task.git'
-            git checkout('PROD')
-            git merge('DEV')
-            git push(url: 'https://github.com/arthur-cloudlem/task.git', branch: 'PROD')
-        } catch (error) {
-            echo error.toString()
+    
+    stages {
+       stage('Checkout') {
+            steps {
+            checkout scmGit(branches: [[name: '**']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ALPHA-04/app-1.git']])
+            }
+       }
+         stage('Clone Repository') {
+            steps {
+            git branch: 'DEV', url: 'https://github.com/ALPHA-04/app-1.git'
+            }
         }
+  
+    stage('Build and Run Docker Compose') {
+            steps {
+           sh 'docker-compose up --force-recreate --no-color --no-color --wait'
+           sh 'docker compose ps'
+           }
+        }
+    
+
+ 
+    
+       
+        //  stage('Push Docker Image to Docker Hub') {
+        //      steps {
+        //          sh 'docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD'
+        //          sh 'docker tag fullstack-app:latest $DOCKER_HUB_USERNAME/fullstack-app:$BUILD_NUMBER'
+        //          sh 'docker push $alpha04/app-01:$BUILD_NUMBER'
+        //           }
+        //     }
+         
+         
+       }
+          
     }
-}
-
-
-        stage("build"){
-            steps{
-                echo'Building the application'
-            }
-        }
-
-
-        stage("test"){
-            steps{
-                echo'testing the application'
-            }
-        }
-
-
-        stage("deploy"){
-            steps{
-                echo'deploying the application'
-            }
-        }
-    }
-
-
-node{
-    //groovy script
-}
