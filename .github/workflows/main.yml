@@ -1,28 +1,17 @@
-
-name: Merge DEV to PROD
-
+name: Merge any release branch to uat
 on:
   push:
     branches:
-      - DEV
-
+      - 'DEV/*'
 jobs:
-  merge:
+  merge-branch:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout PROD branch
-      uses: actions/checkout@v3
-      with:
-        ref: PROD
-        checkout: true
+      - uses: actions/checkout@DEV
 
-    - name: Merge DEV into PROD
-      run: |
-        git merge DEV
-        
-    - name: Push changes to PROD
-      uses: actions/github-script@main
-      with:
-        script: |
-          git push origin PROD
+      - name: Merge staging -> uat
+        uses: devmasx/merge-branch@DEV
+        with:
+          type: now
+          target_branch: PROD
+          github_token: ${{ github.token }}
