@@ -1,28 +1,26 @@
 pipeline {
-    agent {
-        docker {
-            image 'jenkins/jenkins:lts'
-        }
-    }
+    agent any
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/PROD']], 
-                doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], 
-                userRemoteConfigs: [[credentialsId: 'arthurjones.cloudlem', url: 'https://github.com/arthur-cloudlem/task.git']]])
+                git branch: 'PROD',
+                credentialsId: 'arthurjones',
+                url: 'https://github.com/arthur-cloudlem/task2.git'
             }
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t arthurjones/task2:latest .'
+                sh 'docker build -t arthurjones/task2 .'
             }
         }
-        stage('Push to Docker Hub') {
+         
+       
+         stage('Push to Docker Hub') {
             steps {
-                sh 'docker login -u arthurjones -p Roll#947131'
-                sh 'docker push arthurjones/task2:latest'
-            }
-            
-        }
+                    sh 'docker login -u arthurjones -p Roll#947131'
+                    sh 'docker push arthurjones/task2:latest'
+                }
+   
+        }              
     }
-}
+    }
