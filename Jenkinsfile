@@ -20,7 +20,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 sh 'docker login -u arthurjones -p Roll#947131'
-                sh 'docker push arthurjones/task'
+                sh 'docker push arthurjones/task:latest'
             }  
         }
     }
