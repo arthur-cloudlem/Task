@@ -14,14 +14,15 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t arthurjones/task:latest .'
+                sh 'docker build -t arthurjones/task2:latest .'
             }
         }
         stage('Push to Docker Hub') {
             steps {
                 sh 'docker login -u arthurjones -p Roll#947131'
-                sh 'docker push arthurjones/task:latest'
-            }  
+                sh 'docker push arthurjones/task2:latest'
+            }
+            
         }
     }
 }
